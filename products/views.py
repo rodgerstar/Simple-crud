@@ -42,3 +42,13 @@ def product_delete(request, pk):
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/product_detail.html', {'product': product})
+
+
+# search a Product
+def product_list(request):
+    query = request.GET.get('q')  # Get search query from URL
+    if query:
+        products = Product.objects.filter(name__icontains=query) | Product.objects.filter(description__icontains=query)
+    else:
+        products = Product.objects.all()
+    return render(request, 'products/product_list.html', {'products': products, 'query': query})    
